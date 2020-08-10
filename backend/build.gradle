@@ -15,4 +15,6 @@ repositories {
 dependencies {
     implementation "io.vertx:vertx-core:3.9.2"
     implementation 'io.vertx:vertx-web:3.9.2'
+
+    compileOnly 'org.jetbrains:annotations:19.0.0'
 }
