@@ -1,11 +1,9 @@
 package com.sps.controller;
 
 import com.google.inject.Inject;
-import com.sps.entity.Room;
 import com.sps.service.RoomService;
 import com.sps.service.ServiceException;
 import io.vertx.core.Future;
-import io.vertx.core.Promise;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -36,12 +34,10 @@ public class RoomController implements HttpRequestController {
             return Future.failedFuture(new ServiceException("room name is empty"));
         }
 
-        Promise<Room> promise = Promise.promise();
-        service.createRoom(name, promise);
-        return promise.future().compose((room -> {
+        return service.createRoom(name).compose(room -> {
             success(ctx, new JsonObject().put("room", JsonObject.mapFrom(room)));
             return Future.succeededFuture();
-        }));
+        });
     }
 
     private void joinRoom(RoutingContext ctx) {

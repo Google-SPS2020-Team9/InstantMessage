@@ -2,10 +2,10 @@ package com.sps.service;
 
 import com.google.inject.Inject;
 import com.sps.entity.Room;
-import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
-import io.vertx.core.Handler;
+import io.vertx.core.Promise;
 import io.vertx.core.json.JsonArray;
+import io.vertx.ext.sql.UpdateResult;
 import org.jetbrains.annotations.NotNull;
 
 public class RoomService {
@@ -17,20 +17,18 @@ public class RoomService {
         this.database = database;
     }
 
-    public void createRoom(@NotNull String name, @NotNull Handler<AsyncResult<Room>> handle) {
+    public Future<Room> createRoom(@NotNull String name) {
+        Promise<UpdateResult> promise = Promise.promise();
         database.getClient().updateWithParams(
                 "INSERT INTO room (name) VALUES (?)",
                 new JsonArray().add(name),
-                (result) -> {
-                    if (result.failed()) {
-                        handle.handle(Future.failedFuture(result.cause()));
-                        return;
-                    }
-                    int id = result.result().getKeys().getInteger(0);
-                    handle.handle(Future.succeededFuture(new Room(id, name)));
-                }
+                promise
         );
 
+        return promise.future().map(result -> {
+            int id = result.getKeys().getInteger(0);
+            return new Room(id, name);
+        });
     }
 
 }
