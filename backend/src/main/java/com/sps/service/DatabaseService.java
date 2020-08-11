@@ -25,4 +25,9 @@ public class DatabaseService {
     public @NotNull JsonObject getConfig() {
         return config;
     }
+
+    public @NotNull io.vertx.reactivex.ext.jdbc.JDBCClient rxClient() {
+        // 需要在创建 vertx 的时候就创建成 reactive 的 vertx
+        return io.vertx.reactivex.ext.jdbc.JDBCClient.create(io.vertx.reactivex.core.Vertx.vertx(), config);
+    }
 }
