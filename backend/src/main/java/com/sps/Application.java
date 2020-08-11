@@ -1,10 +1,14 @@
 package com.sps;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.sps.controller.HttpRequestController;
+import com.sps.controller.RoomController;
+import com.sps.service.ServiceModule;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.http.HttpServer;
-import io.vertx.core.http.ServerWebSocket;
 import io.vertx.ext.web.Router;
-import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.handler.BodyHandler;
 
 public class Application extends AbstractVerticle {
 
@@ -14,16 +18,15 @@ public class Application extends AbstractVerticle {
         HttpServer server = vertx.createHttpServer();
 
         Router router = Router.router(vertx);
-        router.route("/echo").handler((RoutingContext ctx) -> {
+        router.route().handler(BodyHandler.create());
 
-            ServerWebSocket socket = ctx.request().upgrade();
-
-            socket.textMessageHandler(text -> {
-                System.out.println(text);
-                socket.writeTextMessage(text);
-            });
-
-        });
+        Injector injector = Guice.createInjector(new ServiceModule(vertx));
+        HttpRequestController[] controllers = new HttpRequestController[]{
+                injector.getInstance(RoomController.class)
+        };
+        for (HttpRequestController controller : controllers) {
+            controller.init(router);
+        }
 
         server.requestHandler(router).listen(8080);
     }

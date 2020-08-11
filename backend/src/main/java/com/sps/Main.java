@@ -10,6 +10,8 @@ public class Main {
             if (result.failed()) {
                 result.cause().printStackTrace();
                 vertx.close();
+            } else {
+                System.out.println("server start successfully");
             }
         });
     }
