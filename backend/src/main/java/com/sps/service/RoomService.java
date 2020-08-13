@@ -17,7 +17,7 @@ public class RoomService {
         this.database = database;
     }
 
-    public Future<Room> createRoom(@NotNull String name) {
+    public @NotNull Future<Room> createRoom(@NotNull String name) {
         Promise<UpdateResult> promise = Promise.promise();
         database.getClient().updateWithParams(
                 "INSERT INTO room (name) VALUES (?)",
@@ -28,6 +28,23 @@ public class RoomService {
         return promise.future().map(result -> {
             int id = result.getKeys().getInteger(0);
             return new Room(id, name);
+        });
+    }
+
+    public @NotNull Future<Room> getRoom(int id) {
+        Promise<JsonArray> promise = Promise.promise();
+        database.getClient().querySingleWithParams(
+                "SELECT id, name FROM room WHERE id = ?",
+                new JsonArray().add(id),
+                promise
+        );
+
+        return promise.future().map(result -> {
+            if (result == null) {
+                return null;
+            } else {
+                return new Room(result.getInteger(0), result.getString(1));
+            }
         });
     }
 

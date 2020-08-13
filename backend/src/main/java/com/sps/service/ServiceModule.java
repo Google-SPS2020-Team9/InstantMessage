@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.BindingAnnotation;
 import com.google.inject.Scopes;
 import com.sps.controller.RoomController;
+import com.sps.controller.WebSocketController;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import org.jetbrains.annotations.NotNull;
@@ -40,7 +41,9 @@ public class ServiceModule extends AbstractModule {
         );
         bind(DatabaseService.class).in(Scopes.SINGLETON);
         bind(RoomService.class).in(Scopes.SINGLETON);
+        bind(UserService.class).in(Scopes.SINGLETON);
 
         bind(RoomController.class).in(Scopes.SINGLETON);
+        bind(WebSocketController.class).in(Scopes.SINGLETON);
     }
 }
