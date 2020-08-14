@@ -42,6 +42,7 @@ public class ServiceModule extends AbstractModule {
         bind(DatabaseService.class).in(Scopes.SINGLETON);
         bind(RoomService.class).in(Scopes.SINGLETON);
         bind(UserService.class).in(Scopes.SINGLETON);
+        bind(MessageService.class).in(Scopes.SINGLETON);
 
         bind(RoomController.class).in(Scopes.SINGLETON);
         bind(WebSocketController.class).in(Scopes.SINGLETON);
