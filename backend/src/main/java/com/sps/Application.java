@@ -6,9 +6,11 @@ import com.sps.controller.HttpRequestController;
 import com.sps.controller.RoomController;
 import com.sps.service.ServiceModule;
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServer;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
+import io.vertx.ext.web.handler.CorsHandler;
 
 public class Application extends AbstractVerticle {
 
@@ -18,6 +20,17 @@ public class Application extends AbstractVerticle {
         HttpServer server = vertx.createHttpServer();
 
         Router router = Router.router(vertx);
+        router.route().handler(
+                CorsHandler.create("*")
+                        .allowedHeader("Access-Control-Allow-Method")
+                        .allowedHeader("Access-Control-Allow-Origin")
+                        .allowedHeader("Content-Type")
+                        .allowedMethod(HttpMethod.GET)
+                        .allowedMethod(HttpMethod.POST)
+                        .allowedMethod(HttpMethod.HEAD)
+                        .allowedMethod(HttpMethod.OPTIONS)
+                        .allowedMethod(HttpMethod.DELETE)
+        );
         router.route().handler(BodyHandler.create());
 
         Injector injector = Guice.createInjector(new ServiceModule(vertx));
