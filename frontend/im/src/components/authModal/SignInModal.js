@@ -1,5 +1,5 @@
 import React from "react";
-import { message, Button, Form, Input, Modal } from "antd";
+import { Button, Form, Input, Modal } from "antd";
 import { Context } from "../../context/ContextSource";
 
 class SignInModal extends React.Component {
@@ -18,14 +18,14 @@ class SignInModal extends React.Component {
    */
   handleLogin = () => {
     console.log("SignInModal::handleLogin");
-
-    this.context.conn.send(JSON.stringify(
-      {
+    console.log(this.state.userName);
+    this.context.conn.send(
+      JSON.stringify({
         request_id: Math.random().toString(),
         type: "sign in",
-        username: this.state.userName
-      }
-    ));
+        username: this.state.userName,
+      })
+    );
 
     this.context.setUserName(this.state.userName);
     this.context.closeSignInModal();
@@ -54,14 +54,6 @@ class SignInModal extends React.Component {
         className="sign-in-modal"
         visible={this.context.signInModalVisibility}
         footer={null}
-        onCancel={() => {
-          this.context.user === null
-            ? message.warning(
-                "You need to have a username to use Instant Message!",
-                3
-              )
-            : this.context.closeSignInModal();
-        }}
       >
         <p>
           You've successfully entered room {this.context.roomName}. The next
@@ -70,10 +62,7 @@ class SignInModal extends React.Component {
         </p>
         <Form onFinish={this.handleLogin} {...layout}>
           <Form.Item label="UserName" name="username">
-            <Input
-              value={this.state.roomNumber}
-              onChange={this.handleRoomNumber}
-            />
+            <Input value={this.state.userName} onChange={this.handleUserName} />
           </Form.Item>
 
           <Form.Item {...tailLayout}>

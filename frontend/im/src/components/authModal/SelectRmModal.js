@@ -14,8 +14,8 @@ class SelectRmModal extends React.Component {
     super(props);
     this.state = {
       activeTab: "enter",
-      roomid: null,
-      roomName: null,
+      roomid: "",
+      roomName: "",
     };
   }
 
@@ -24,8 +24,7 @@ class SelectRmModal extends React.Component {
    */
   handleEnterRoom = () => {
     console.log("SelectRmModal::handleEnterRoom");
-    console.log(this.context.host);
-    console.log(this.state.roomid);
+    if (this.state.roomid === "") return;
     this.context.setConn(
       new WebSocket(`ws://${this.context.host}/room/${this.state.roomid}`)
     );
@@ -37,6 +36,7 @@ class SelectRmModal extends React.Component {
    * Handling creating a room. Triggers enter room automatically inside.
    */
   handleCreateRoom = () => {
+    if (this.state.roomName === "") return;
     console.log("SelectRmModal::handleCreateRoom");
     axios
       .post(`http://${this.context.host}/room`, {
@@ -81,11 +81,6 @@ class SelectRmModal extends React.Component {
         className="select-room-modal"
         visible={this.context.selectRmModalVisibility}
         footer={null}
-        onCancel={() => {
-          this.context.user === null
-            ? message.warning("You have to log in to use Instant Message!", 3)
-            : this.context.closeSelectRmModal();
-        }}
       >
         <Tabs
           defaultActiveKey="enter"

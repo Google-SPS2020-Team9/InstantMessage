@@ -9,6 +9,7 @@ import "./ChatPage.css";
 class ChatPage extends React.Component {
   state = {
     msgs: [],
+    submitting: false,
   };
 
   static contextType = Context;
@@ -25,11 +26,27 @@ class ChatPage extends React.Component {
       }
       if (data.type === "push messages") {
         for (var msg of data.messages) {
-          this.state.msgs.push(msg);
+          this.setState((prevState) => ({
+            msgs: [...prevState.msgs, msg],
+          }));
+          console.log(this.state.msgs);
           console.log(
             "[message received] " + msg.owner.name + ": " + msg.content
           );
         }
+      } else if (data.type === "sign in result") {
+        this.context.setUserId(data.user.id);
+        this.context.setUserName(data.user.name);
+        message.success("Login successful as " + this.context.username);
+        console.log("[signing in] " + data.user.id + ": " + data.user.name);
+      } else if (data.type === "send message result") {
+        this.setState({ submitting: false });
+        console.log(
+          "[message sent] " +
+            data.message.owner.name +
+            ": " +
+            data.message.content
+        );
       }
     };
   }
@@ -44,7 +61,6 @@ class ChatPage extends React.Component {
 
   render() {
     const { msgs } = this.state;
-    console.log(msgs);
     return (
       <div id="main">
         <div className="site-page-header-ghost-wrapper">
@@ -66,7 +82,7 @@ class ChatPage extends React.Component {
             renderItem={(item) => <MsgEntry item={item} />}
           />
           <Divider />
-          <SendMsg />
+          <SendMsg submitting={this.state.submitting} />
         </Card>
       </div>
     );

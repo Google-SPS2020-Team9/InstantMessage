@@ -1,15 +1,16 @@
 import React from "react";
-import { message, Alert, Button, Input } from "antd";
+import { message, Button, Input } from "antd";
 import { Context } from "../../context/ContextSource";
 import "./SendMsg.css";
 
 class SendMsg extends React.Component {
-  state = {
-    submitting: false,
-    content: "",
-    showAlert: false,
-    alertText: "",
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      submitting: false,
+      content: "",
+    };
+  }
 
   handleContentChange = (e) => {
     this.setState({ content: e.target.value });
@@ -18,8 +19,11 @@ class SendMsg extends React.Component {
   static contextType = Context;
 
   handleSubmit = () => {
+    if (this.state.content === "") {
+      message.error("Cannot send an empty message");
+      return;
+    }
     this.setState({ submitting: true });
-
     this.context.conn.send(
       JSON.stringify({
         request_id: Math.random().toString(),
@@ -27,33 +31,39 @@ class SendMsg extends React.Component {
         content: this.state.content,
       })
     );
-
-    this.setState({ content: "", submitting: false });
   };
+
+  onEnterPress = (e) => {
+    if (e.keyCode === 13 && e.shiftKey === false) {
+      e.preventDefault();
+      this.handleSubmit();
+    }
+  };
+
+  componentWillReceiveProps(props) {
+    this.setState({ submitting: props.submitting });
+    if (!this.state.submitting) {
+      this.setState({ content: "" });
+    }
+  }
 
   render() {
     return (
-      <div>
-        {this.state.showAlert ? (
-          <Alert
-            message={this.state.alertText}
-            type="warning"
-            closable={true}
-            onClose={this.handleCloseAlert}
-          />
-        ) : null}
-        <div className="comment-row-container">
-          <Input.TextArea rows={1} onChange={this.handleContentChange} />
-          <Button
-            className="send-msg-btn"
-            htmlType="submit"
-            loading={this.state.submitting}
-            onClick={this.handleSubmit}
-            type="primary"
-          >
-            Send
-          </Button>
-        </div>
+      <div id="comment-row-container">
+        <Input.TextArea
+          rows={7}
+          value={this.state.content}
+          onChange={this.handleContentChange}
+          onKeyDown={this.onEnterPress}
+        />
+        <Button
+          id="send-msg-btn"
+          loading={this.state.submitting}
+          htmlType="submit"
+          type="primary"
+        >
+          Send
+        </Button>
       </div>
     );
   }

@@ -21,8 +21,6 @@ export class ContextProvider extends React.Component {
     const userconfig = UserConfig;
     this.setState({
       host: "gogo.moe:8080",
-      username: userconfig.username,
-      userid: userconfig.userid,
       roomName: userconfig.roomname,
       roomid: userconfig.roomid,
     });

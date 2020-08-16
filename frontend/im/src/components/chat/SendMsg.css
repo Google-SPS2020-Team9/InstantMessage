@@ -1,8 +1,13 @@
-.comment-row-container {
+#comment-row-container {
   display: flex;
   flex-direction: row;
 }
 
-.send-msg-btn {
+#send-msg-btn {
   margin-left: 10px;
+  align-self: flex-end;
+}
+
+#input-textarea {
+  width: auto;
 }
