@@ -9,8 +9,10 @@ import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+import java.util.Properties;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -24,20 +26,24 @@ public class ServiceModule extends AbstractModule {
     }
 
     private final @NotNull Vertx vertx;
+    private static final Properties databaseProperties = new Properties();
+    private static final String DATABASE_CONFIG_FILE = "databaseConfig.properties";
 
     public ServiceModule(@NotNull Vertx vertx) {
         this.vertx = vertx;
+
+        try {
+            databaseProperties.load(getClass().getClassLoader().getResourceAsStream(DATABASE_CONFIG_FILE));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void configure() {
         bind(Vertx.class).toInstance(vertx);
         bind(JsonObject.class).annotatedWith(DatabaseConfig.class).toInstance(
-                new JsonObject()
-                        .put("url", "jdbc:mysql://localhost:3306/instant_message?serverTimezone=GMT")
-                        .put("driver_class", "com.mysql.cj.jdbc.Driver")
-                        .put("user", "root")
-                        .put("password", "")
+                JsonObject.mapFrom(databaseProperties)
         );
         bind(DatabaseService.class).in(Scopes.SINGLETON);
         bind(RoomService.class).in(Scopes.SINGLETON);
