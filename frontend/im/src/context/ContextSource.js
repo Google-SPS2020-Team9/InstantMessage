@@ -1,5 +1,4 @@
 import React from "react";
-import UserConfig from "../testData/userconfig.json";
 
 export const Context = React.createContext();
 
@@ -11,19 +10,9 @@ export class ContextProvider extends React.Component {
       userid: null,
       roomName: null,
       roomid: null,
-      host: null,
       selectRmModalVisibility: true,
       signInModalVisibility: false,
     };
-  }
-
-  componentDidMount() {
-    const userconfig = UserConfig;
-    this.setState({
-      host: "gogo.moe:8080",
-      roomName: userconfig.roomname,
-      roomid: userconfig.roomid,
-    });
   }
 
   // SelectRmModal related
@@ -70,9 +59,6 @@ export class ContextProvider extends React.Component {
   };
 
   // Connection related
-  setHost = (host) => {
-    this.setState({ host: host });
-  };
   setConn = (conn) => {
     this.setState({ conn: conn });
   };
@@ -84,7 +70,6 @@ export class ContextProvider extends React.Component {
           username: this.state.username,
           userid: this.state.userid,
           roomName: this.state.roomName,
-          host: this.state.host,
           conn: this.state.conn,
           selectRmModalVisibility: this.state.selectRmModalVisibility,
           signInModalVisibility: this.state.signInModalVisibility,
@@ -92,7 +77,6 @@ export class ContextProvider extends React.Component {
           setUserId: this.setUserId,
           setRoomName: this.setRoomName,
           setRoomId: this.setRoomId,
-          setHost: this.setHost,
           setConn: this.setConn,
           showSelectRmModal: this.showSelectRmModal,
           closeSelectRmModal: this.closeSelectRmModal,

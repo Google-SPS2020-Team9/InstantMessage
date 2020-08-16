@@ -2,6 +2,7 @@ import React from "react";
 import { message, Button, Form, Input, Modal, Tabs } from "antd";
 import { Context } from "../../context/ContextSource";
 
+import config from "../../config"
 import "./AuthModal.css";
 
 const { TabPane } = Tabs;
@@ -25,7 +26,7 @@ class SelectRmModal extends React.Component {
     console.log("SelectRmModal::handleEnterRoom");
     if (this.state.roomid === "") return;
     this.context.setConn(
-      new WebSocket(`ws://${this.context.host}/room/${this.state.roomid}`)
+      new WebSocket(`ws://${config.host}/room/${this.state.roomid}`)
     );
     this.context.setRoomId(this.state.roomid);
     this.context.setRoomName(this.state.roomName);
@@ -43,7 +44,7 @@ class SelectRmModal extends React.Component {
       method: "POST",
       body: JSON.stringify({ name: this.state.roomName }),
     };
-    fetch(`http://${this.context.host}/room`, requestOptions)
+    fetch(`http://${config.host}/room`, requestOptions)
       .then((res) => res.json())
       .then((jsondata) => {
         console.log(jsondata);

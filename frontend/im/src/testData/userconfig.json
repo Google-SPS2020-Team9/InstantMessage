@@ -2,6 +2,5 @@
     "username": "meg",
     "userid": 12343,
     "roomname": "a room",
-    "roomid": 6666,
-    "host": "localhost:3000"
+    "roomid": 6666
 }
