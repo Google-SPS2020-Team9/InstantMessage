@@ -1,0 +1,37 @@
+.msg-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  width: fit-content;
+}
+
+.outgoing {
+  margin-left: auto;
+}
+
+.msg-name {
+  color: #8c8c8c;
+  font-size: 12px;
+}
+
+.outgoing {
+  align-items: flex-end;
+}
+
+.msg-content {
+  border-radius: 15px;
+  margin: 3px 0;
+  max-width: 500px;
+  padding: 10px;
+  width: fit-content;
+}
+
+.incoming > .msg-content {
+  background-color: #f0f0f0;
+  color: #141414;
+}
+
+.outgoing > .msg-content {
+  background-color: #1890ff;
+  color: #fafafa;
+}

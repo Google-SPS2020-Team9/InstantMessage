@@ -1,0 +1,22 @@
+
+  #main {
+    height: 900px;
+    margin: auto;
+    width: 1000px;
+  }
+
+  .site-page-header-ghost-wrapper {
+    background-color: #f5f5f5;
+    padding: 20px;
+  }
+
+  .msg-list {
+    display: flex;
+    flex-direction: column-reverse;
+    height: 700px;
+    overflow-y: scroll;
+  }
+
+  .msg-list::-webkit-scrollbar {
+    display: none;
+  }
