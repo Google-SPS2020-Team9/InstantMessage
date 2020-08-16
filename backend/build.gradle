@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
 group 'com.sps-program'
@@ -8,6 +9,11 @@ version '1.0'
 repositories {
     maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
     mavenCentral()
+}
+
+application {
+    mainClass = 'com.sps.Main'
+    applicationDefaultJvmArgs = ['-Dfile.encoding=UTF-8']
 }
 
 dependencies {
