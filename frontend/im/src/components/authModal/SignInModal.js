@@ -2,6 +2,8 @@ import React from "react";
 import { Button, Form, Input, Modal } from "antd";
 import { Context } from "../../context/ContextSource";
 
+import "./AuthModal.css";
+
 class SignInModal extends React.Component {
   static contextType = Context;
 

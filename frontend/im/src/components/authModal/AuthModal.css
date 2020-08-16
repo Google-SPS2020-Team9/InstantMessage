@@ -6,3 +6,7 @@
   width: 50%;
   text-align: center;
 }
+
+.ant-modal-close-x {
+  display: none;
+}

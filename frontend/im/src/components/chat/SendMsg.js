@@ -51,7 +51,7 @@ class SendMsg extends React.Component {
     return (
       <div id="comment-row-container">
         <Input.TextArea
-          rows={7}
+          rows={4}
           value={this.state.content}
           onChange={this.handleContentChange}
           onKeyDown={this.onEnterPress}

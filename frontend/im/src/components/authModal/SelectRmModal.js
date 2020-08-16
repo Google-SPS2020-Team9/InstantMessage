@@ -1,9 +1,8 @@
 import React from "react";
 import { message, Button, Form, Input, Modal, Tabs } from "antd";
 import { Context } from "../../context/ContextSource";
-import axios from "axios";
 
-import "./SelectRmModal.css";
+import "./AuthModal.css";
 
 const { TabPane } = Tabs;
 
@@ -28,6 +27,8 @@ class SelectRmModal extends React.Component {
     this.context.setConn(
       new WebSocket(`ws://${this.context.host}/room/${this.state.roomid}`)
     );
+    this.context.setRoomId(this.state.roomid);
+    this.context.setRoomName(this.state.roomName);
     this.context.closeSelectRmModal();
     this.context.showSignInModal();
   };
@@ -38,13 +39,19 @@ class SelectRmModal extends React.Component {
   handleCreateRoom = () => {
     if (this.state.roomName === "") return;
     console.log("SelectRmModal::handleCreateRoom");
-    axios
-      .post(`http://${this.context.host}/room`, {
-        name: this.state.roomName,
-      })
-      .then((res) => {
-        if (res.status === 202) {
-          this.setState({ roomid: res.room.id });
+    const requestOptions = {
+      method: "POST",
+      body: JSON.stringify({ name: this.state.roomName }),
+    };
+    fetch(`http://${this.context.host}/room`, requestOptions)
+      .then((res) => res.json())
+      .then((jsondata) => {
+        console.log(jsondata);
+        if (jsondata.success === true) {
+          this.setState({
+            roomid: jsondata.room.id,
+            roomName: jsondata.room.name,
+          });
           this.handleEnterRoom();
         }
       })

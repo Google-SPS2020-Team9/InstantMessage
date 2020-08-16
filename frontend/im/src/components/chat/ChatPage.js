@@ -69,8 +69,8 @@ class ChatPage extends React.Component {
             title={this.context.roomName}
             subTitle={this.context.username}
             extra={[
-              <Button onClick={this.inviteMember}>Invite Member</Button>,
-              <Button onClick={this.exit}>Exit</Button>,
+              <Button key="invite" onClick={this.inviteMember}>Invite Member</Button>,
+              <Button key="exit" onClick={this.exit}>Exit</Button>,
             ]}
           ></PageHeader>
         </div>
