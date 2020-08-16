@@ -40,7 +40,7 @@ class SendMsg extends React.Component {
     }
   };
 
-  componentWillReceiveProps(props) {
+  UNSAFE_componentWillReceiveProps(props) {
     this.setState({ submitting: props.submitting });
     if (!this.state.submitting) {
       this.setState({ content: "" });

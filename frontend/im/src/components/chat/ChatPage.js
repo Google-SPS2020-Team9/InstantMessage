@@ -25,7 +25,7 @@ class ChatPage extends React.Component {
         return;
       }
       if (data.type === "push messages") {
-        for (var msg of data.messages) {
+        for (const msg of data.messages) {
           this.setState((prevState) => ({
             msgs: [...prevState.msgs, msg],
           }));
