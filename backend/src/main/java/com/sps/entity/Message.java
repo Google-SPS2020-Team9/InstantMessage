@@ -1,5 +1,6 @@
 package com.sps.entity;
 
+import io.vertx.core.json.JsonObject;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
@@ -38,5 +39,14 @@ public class Message {
 
     public @NotNull LocalDateTime getSendTime() {
         return sendTime;
+    }
+
+    public @NotNull JsonObject toJsonWithoutRoom() {
+        return new JsonObject()
+                .put("id", getId())
+                .put("owner", JsonObject.mapFrom(getOwner()))
+                .put("room", getRoom().getId())
+                .put("content", getContent())
+                .put("sendTime", getSendTime().toString());
     }
 }

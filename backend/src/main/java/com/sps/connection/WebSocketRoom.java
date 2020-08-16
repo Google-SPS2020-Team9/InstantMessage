@@ -40,7 +40,7 @@ public class WebSocketRoom {
                 .put("type", "push messages")
                 .put("messages",
                         messages.stream()
-                                .map(JsonObject::mapFrom)
+                                .map(Message::toJsonWithoutRoom)
                                 .collect(Collectors.toList())
                 );
 

@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.sps.connection.WebSocketConnection;
 import com.sps.connection.WebSocketRequestContext;
 import com.sps.connection.WebSocketRoom;
+import com.sps.entity.Message;
 import com.sps.entity.Room;
 import com.sps.entity.User;
 import com.sps.service.MessageService;
@@ -13,8 +14,10 @@ import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class WebSocketController {
 
@@ -36,6 +39,7 @@ public class WebSocketController {
 
         handlers.put("sign in", this::signIn);
         handlers.put("send message", this::sendMessage);
+        handlers.put("pull messages", this::pullMessages);
     }
 
     public void initConnection(@NotNull WebSocketConnection connection,
@@ -100,13 +104,37 @@ public class WebSocketController {
         return messageService.createMessage(user, room, content).compose(message -> {
             context.getRoom().pushMessage(message);
             context.success(
-                    new JsonObject().put("message",
-                            new JsonObject()
-                                    .put("id", message.getId())
-                                    .put("owner", JsonObject.mapFrom(message.getOwner()))
-                                    .put("room", message.getRoom().getId())
-                                    .put("content", message.getContent())
-                                    .put("sendTime", message.getSendTime().toString())
+                    new JsonObject().put("message", message.toJsonWithoutRoom())
+            );
+            return Future.succeededFuture();
+        });
+    }
+
+    private @NotNull Future<Void> pullMessages(@NotNull WebSocketRequestContext context) {
+        User user = context.getConnection().getUser();
+        Room room = context.getRoom().getRoom();
+
+        if (user == null) {
+            return Future.failedFuture(new ServiceException("not login"));
+        }
+        String direction = context.getMessage().getString("direction");
+        if (direction == null || direction.isEmpty()) {
+            return Future.failedFuture(new ServiceException("direction is empty"));
+        }
+        if (!direction.equals("before") && !direction.equals("after")) {
+            return Future.failedFuture(new ServiceException("direction is illegal"));
+        }
+        boolean after = direction.equals("after");
+
+        String datetimeString = context.getMessage().getString("datetime");
+        LocalDateTime dateTime = LocalDateTime.parse(datetimeString);
+
+        return messageService.getMessages(room, after, dateTime).compose(messages -> {
+            context.success(
+                    new JsonObject().put("messages",
+                            messages.stream()
+                                    .map(Message::toJsonWithoutRoom)
+                                    .collect(Collectors.toList())
                     )
             );
             return Future.succeededFuture();
