@@ -2,7 +2,7 @@ import React from "react";
 import { message, Button, Form, Input, Modal, Tabs } from "antd";
 import { Context } from "../../context/ContextSource";
 
-import config from "../../config"
+import config from "../../config";
 import "./AuthModal.css";
 
 const { TabPane } = Tabs;
@@ -28,10 +28,6 @@ class SelectRmModal extends React.Component {
     this.context.setConn(
       new WebSocket(`ws://${config.host}/room/${this.state.roomid}`)
     );
-    this.context.setRoomId(this.state.roomid);
-    this.context.setRoomName(this.state.roomName);
-    this.context.closeSelectRmModal();
-    this.context.showSignInModal();
   };
 
   /**

@@ -28,9 +28,6 @@ class SignInModal extends React.Component {
         username: this.state.userName,
       })
     );
-
-    this.context.setUserName(this.state.userName);
-    this.context.closeSignInModal();
   };
 
   /**
