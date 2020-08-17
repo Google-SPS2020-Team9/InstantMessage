@@ -63,14 +63,25 @@ public class RoomController implements HttpRequestController {
                 .onSuccess(room -> {
                     WebSocketConnection connection = new WebSocketConnection(room.getRoom(), socket);
                     websocket.initConnection(connection, room);
+                    connection.send(
+                            new JsonObject()
+                                    .put("success", true)
+                                    .put("type", "room state")
+                                    .put("room", JsonObject.mapFrom(room.getRoom()))
+                    );
                 })
                 .onFailure(error -> {
-                    short statusCode = 400;
                     if (!(error instanceof ServiceException)) {
-                        statusCode = 500;
                         error.printStackTrace();
                     }
-                    socket.close(statusCode, error.getMessage());
+                    socket.writeTextMessage(
+                            new JsonObject()
+                                    .put("success", false)
+                                    .put("type", "room state")
+                                    .put("error", "Room not exist")
+                                    .encode()
+                    );
+                    socket.close();
                 });
     }
 
