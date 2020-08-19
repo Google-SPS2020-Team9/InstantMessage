@@ -1,0 +1,12 @@
+.select-room-modal .ant-tabs-nav {
+  width: 100%;
+}
+
+.select-room-modal .ant-tabs-tab {
+  width: 50%;
+  text-align: center;
+}
+
+.ant-modal-close-x {
+  display: none;
+}
