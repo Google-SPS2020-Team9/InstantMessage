@@ -1,6 +1,6 @@
 import React from "react";
-import { message, Button, Input } from "antd";
-import { Context } from "../../context/ContextSource";
+import {message, Button, Input} from "antd";
+import {Context} from "../../context/ContextSource";
 import "./SendMsg.css";
 
 class SendMsg extends React.Component {
@@ -13,7 +13,7 @@ class SendMsg extends React.Component {
   }
 
   handleContentChange = (e) => {
-    this.setState({ content: e.target.value });
+    this.setState({content: e.target.value});
   };
 
   static contextType = Context;
@@ -23,14 +23,16 @@ class SendMsg extends React.Component {
       message.error("Cannot send an empty message");
       return;
     }
-    this.setState({ submitting: true });
-    this.context.conn.send(
-      JSON.stringify({
-        request_id: Math.random().toString(),
-        type: "send message",
-        content: this.state.content,
-      })
-    );
+    this.setState({submitting: true});
+    this.context.conn.request("send message", {content: this.state.content}).then(data => {
+      this.setState({content: ""});
+      console.log(`[message sent] ${data.message.owner.name}: ${data.message.content}`);
+    }).catch(data => {
+      message.error("Message unsent. Please try again.");
+      console.error(data);
+    }).finally(() => {
+      this.setState({submitting: false});
+    })
   };
 
   onEnterPress = (e) => {
@@ -42,8 +44,8 @@ class SendMsg extends React.Component {
 
   UNSAFE_componentWillReceiveProps(props) {
     // TODO: not an elegant way to pass two vars. Need to rewrite.
-    this.setState({ submitting: props.submitting });
-    if (props.content === "") this.setState({ content: "" });
+    this.setState({submitting: props.submitting});
+    if (props.content === "") this.setState({content: ""});
   }
 
   render() {

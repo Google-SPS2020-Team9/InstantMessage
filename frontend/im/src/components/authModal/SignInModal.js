@@ -1,6 +1,6 @@
 import React from "react";
-import { Button, Form, Input, Modal } from "antd";
-import { Context } from "../../context/ContextSource";
+import {Button, Form, Input, message, Modal} from "antd";
+import {Context} from "../../context/ContextSource";
 
 import "./AuthModal.css";
 
@@ -21,29 +21,33 @@ class SignInModal extends React.Component {
   handleLogin = () => {
     console.log("SignInModal::handleLogin");
     console.log(this.state.userName);
-    this.context.conn.send(
-      JSON.stringify({
-        request_id: Math.random().toString(),
-        type: "sign in",
-        username: this.state.userName,
-      })
-    );
+    this.context.conn.request("sign in", {username: this.state.userName}).then(data => {
+      this.context.setUserId(data.user.id);
+      this.context.setUserName(data.user.name);
+      this.context.closeSignInModal();
+      message.success("Login successful as " + this.context.username);
+      console.log("[signing in] " + data.user.id + ": " + data.user.name);
+
+    }).catch(data => {
+      message.error("Login failed. Please try again.");
+      console.error(data);
+    })
   };
 
   /**
    * Handling input field changes.
    */
   handleUserName = (e) => {
-    this.setState({ userName: e.target.value });
+    this.setState({userName: e.target.value});
   };
 
   render() {
     const layout = {
-      labelCol: { span: 0 },
-      wrapperCol: { span: 16 },
+      labelCol: {span: 0},
+      wrapperCol: {span: 16},
     };
     const tailLayout = {
-      wrapperCol: { offset: 0, span: 16 },
+      wrapperCol: {offset: 0, span: 16},
     };
 
     return (
@@ -61,7 +65,7 @@ class SignInModal extends React.Component {
         </p>
         <Form onFinish={this.handleLogin} {...layout}>
           <Form.Item label="UserName" name="username">
-            <Input value={this.state.userName} onChange={this.handleUserName} />
+            <Input value={this.state.userName} onChange={this.handleUserName}/>
           </Form.Item>
 
           <Form.Item {...tailLayout}>

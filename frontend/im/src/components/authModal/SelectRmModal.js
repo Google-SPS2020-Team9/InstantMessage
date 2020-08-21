@@ -1,6 +1,7 @@
 import React from "react";
 import { message, Button, Form, Input, Modal, Tabs } from "antd";
 import { Context } from "../../context/ContextSource";
+import { Connection } from "../../context/Connection"
 
 import config from "../../config";
 import "./AuthModal.css";
@@ -25,10 +26,30 @@ class SelectRmModal extends React.Component {
   handleEnterRoom = () => {
     console.log("SelectRmModal::handleEnterRoom");
     if (this.state.roomid === "") return;
-    this.context.setConn(
-      new WebSocket(`ws://${config.host}/room/${this.state.roomid}`)
-    );
-  };
+
+    const connection = new Connection(this.state.roomid);
+    this.context.setConn(connection);
+    connection.addHandler("room state", (data) => {
+      if (data.success === true) {
+        console.log(
+          "[room state]: joining successful. Room id: " + data.room.id
+        );
+        this.context.setRoomId(data.room.id);
+        this.context.setRoomName(data.room.name);
+        this.context.closeSelectRmModal();
+        this.context.showSignInModal();
+      } else {
+        console.log("[room state]: joining unsuccessful.");
+        this.context.setConn(null);
+        if (data.error === "Room not exist") {
+          message.error("Room doesn't exist.");
+        } else {
+          message.error("An error occurred. Please try again.");
+          console.error(data);
+        }
+      }
+    })
+  }
 
   /**
    * Handling creating a room. Triggers enter room automatically inside.
