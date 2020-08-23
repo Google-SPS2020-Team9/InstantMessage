@@ -1,0 +1,28 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'com.sps-program'
+version '1.0'
+
+repositories {
+    maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+    mavenCentral()
+}
+
+application {
+    mainClass = 'com.sps.Main'
+    applicationDefaultJvmArgs = ['-Dfile.encoding=UTF-8']
+}
+
+dependencies {
+    implementation 'io.vertx:vertx-core:3.9.2'
+    implementation 'io.vertx:vertx-web:3.9.2'
+    implementation 'io.vertx:vertx-jdbc-client:3.9.2'
+
+    implementation 'com.google.inject:guice:4.2.3'
+    implementation 'mysql:mysql-connector-java:8.0.21'
+
+    compileOnly 'org.jetbrains:annotations:19.0.0'
+}
