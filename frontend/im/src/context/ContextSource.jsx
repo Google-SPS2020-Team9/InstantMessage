@@ -1,69 +1,81 @@
-import React from "react";
+import React from 'react'
+import PropTypes from 'prop-types'
 
-export const Context = React.createContext();
+export const Context = React.createContext()
 
 export class ContextProvider extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
       username: null,
       userid: null,
       roomName: null,
       roomid: null,
       selectRmModalVisibility: true,
-      signInModalVisibility: false,
-    };
+      signInModalVisibility: false
+    }
+  }
+
+  static get propTypes () {
+    return {
+      children: PropTypes.any
+    }
   }
 
   // SelectRmModal related
   setSelectRmModalVisibility = (v) => {
     this.setState({
-      selectRmModalVisibility: v,
-    });
+      selectRmModalVisibility: v
+    })
   };
+
   showSelectRmModal = () => {
-    this.setSelectRmModalVisibility(true);
+    this.setSelectRmModalVisibility(true)
   };
+
   closeSelectRmModal = () => {
-    this.setSelectRmModalVisibility(false);
+    this.setSelectRmModalVisibility(false)
   };
 
   // SignInModal related
   setSignInModalVisibility = (v) => {
     this.setState({
-      signInModalVisibility: v,
-    });
+      signInModalVisibility: v
+    })
   };
+
   showSignInModal = () => {
-    this.setSignInModalVisibility(true);
+    this.setSignInModalVisibility(true)
   };
+
   closeSignInModal = () => {
-    this.setSignInModalVisibility(false);
+    this.setSignInModalVisibility(false)
   };
 
   // User related
   setUserName = (username) => {
-    this.setState({ username: username });
+    this.setState({ username: username })
   };
+
   setUserId = (userid) => {
-    this.setState({ userid: userid });
+    this.setState({ userid: userid })
   };
 
   // Room related
   setRoomName = (room) => {
-    this.setState({ roomName: room });
+    this.setState({ roomName: room })
   };
 
   setRoomId = (roomid) => {
-    this.setState({ roomid: roomid });
+    this.setState({ roomid: roomid })
   };
 
   // Connection related
   setConn = (conn) => {
-    this.setState({ conn: conn });
+    this.setState({ conn: conn })
   };
 
-  render() {
+  render () {
     return (
       <Context.Provider
         value={{
@@ -81,11 +93,11 @@ export class ContextProvider extends React.Component {
           showSelectRmModal: this.showSelectRmModal,
           closeSelectRmModal: this.closeSelectRmModal,
           showSignInModal: this.showSignInModal,
-          closeSignInModal: this.closeSignInModal,
+          closeSignInModal: this.closeSignInModal
         }}
       >
         {this.props.children}
       </Context.Provider>
-    );
+    )
   }
 }
