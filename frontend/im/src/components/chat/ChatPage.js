@@ -3,22 +3,16 @@ import {Button, Card, Divider, List, PageHeader} from "antd";
 import MsgEntry from "./MsgEntry";
 import SendMsg from "./SendMsg";
 import {Context} from "../../context/ContextSource";
-import TestMsgs from "../../testData/msgs";
 import "./ChatPage.css";
 
 class ChatPage extends React.Component {
   state = {
-    msgs: [],
-    submitting: false,
-    content: "",
+    msgs: []
   };
 
   static contextType = Context;
 
   componentDidMount() {
-    this.setState({
-      msgs: TestMsgs.messages,
-    });
     this.context.conn.addHandler("push messages", (data) => {
       for (const msg of data.messages) {
         this.setState((prevState) => ({
@@ -58,7 +52,7 @@ class ChatPage extends React.Component {
                 Exit
               </Button>,
             ]}
-          ></PageHeader>
+          />
         </div>
         <Card>
           <List
@@ -68,10 +62,7 @@ class ChatPage extends React.Component {
             renderItem={(item) => <MsgEntry item={item}/>}
           />
           <Divider/>
-          <SendMsg
-            submitting={this.state.submitting}
-            content={this.state.content}
-          />
+          <SendMsg/>
         </Card>
       </div>
     );

@@ -42,12 +42,6 @@ class SendMsg extends React.Component {
     }
   };
 
-  UNSAFE_componentWillReceiveProps(props) {
-    // TODO: not an elegant way to pass two vars. Need to rewrite.
-    this.setState({submitting: props.submitting});
-    if (props.content === "") this.setState({content: ""});
-  }
-
   render() {
     return (
       <div id="comment-row-container">
