@@ -1,37 +1,36 @@
-import config from "../config";
+import config from '../config'
 
 export class Connection {
-
-  constructor(roomId) {
-    this.handlers = {};
+  constructor (roomId) {
+    this.handlers = {}
     this.requestPool = {}
-    this.conn = new WebSocket(`ws://${config.host}/room/${roomId}`);
+    this.conn = new WebSocket(`ws://${config.host}/room/${roomId}`)
     this.conn.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      const handler = this.handlers[data.type];
+      const data = JSON.parse(event.data)
+      const handler = this.handlers[data.type]
       if (!handler) {
-        throw new Error(`cannot find handler for type ${data.type}`);
+        throw new Error(`cannot find handler for type ${data.type}`)
       }
-      handler(data);
-    };
-  }
-
-  addHandler(type, handler) {
-    if (this.handlers[type]) {
-      throw new Error(`handler for type ${type} already exist`);
+      handler(data)
     }
-    this.handlers[type] = handler;
   }
 
-  request(type, data) {
-    this.registerRequest(type);
+  addHandler (type, handler) {
+    if (this.handlers[type]) {
+      throw new Error(`handler for type ${type} already exist`)
+    }
+    this.handlers[type] = handler
+  }
+
+  request (type, data) {
+    this.registerRequest(type)
     const requestId = Math.random().toString()
     data = {
       type,
       request_id: requestId,
       ...data
     }
-    this.conn.send(JSON.stringify(data));
+    this.conn.send(JSON.stringify(data))
 
     return new Promise((resolve, reject) => {
       const timeoutId = setTimeout(() => {
@@ -49,11 +48,10 @@ export class Connection {
           reject(data)
         }
       }
-
     })
   }
 
-  registerRequest(type) {
+  registerRequest (type) {
     if (this.requestPool[type] !== undefined) {
       return
     }
@@ -65,5 +63,4 @@ export class Connection {
       }
     })
   }
-
 }
