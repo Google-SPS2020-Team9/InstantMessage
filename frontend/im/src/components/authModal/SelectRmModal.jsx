@@ -5,6 +5,7 @@ import { Connection } from '../../context/Connection'
 
 import config from '../../config'
 import './AuthModal.css'
+import PropTypes from 'prop-types'
 
 const { TabPane } = Tabs
 
@@ -17,6 +18,12 @@ class SelectRmModal extends React.Component {
       activeTab: 'enter',
       roomid: '',
       roomName: ''
+    }
+  }
+
+  static get propTypes () {
+    return {
+      history: PropTypes.any
     }
   }
 

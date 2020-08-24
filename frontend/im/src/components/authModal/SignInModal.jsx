@@ -3,6 +3,7 @@ import { Button, Form, Input, message, Modal } from 'antd'
 import { Context } from '../../context/ContextSource'
 
 import './AuthModal.css'
+import PropTypes from 'prop-types'
 
 class SignInModal extends React.Component {
   static contextType = Context;
@@ -12,6 +13,12 @@ class SignInModal extends React.Component {
     this.wrapper = React.createRef()
     this.state = {
       userName: null
+    }
+  }
+
+  static get propTypes () {
+    return {
+      history: PropTypes.any
     }
   }
 

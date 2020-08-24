@@ -4,6 +4,7 @@ import MsgEntry from './MsgEntry'
 import SendMsg from './SendMsg'
 import { Context } from '../../context/ContextSource'
 import './ChatPage.css'
+import PropTypes from 'prop-types'
 
 class ChatPage extends React.Component {
   state = {
@@ -11,6 +12,12 @@ class ChatPage extends React.Component {
   };
 
   static contextType = Context;
+
+  static get propTypes () {
+    return {
+      history: PropTypes.any
+    }
+  }
 
   componentDidMount () {
     this.context.conn.addHandler('push messages', (data) => {

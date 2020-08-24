@@ -1,7 +1,7 @@
-import {Context} from '../../context/ContextSource'
-import {Connection} from "../../context/Connection";
-import {message} from "antd";
-import SignInModal from "./SignInModal";
+import { Context } from '../../context/ContextSource'
+import { Connection } from '../../context/Connection'
+import { message } from 'antd'
+import SignInModal from './SignInModal'
 
 class SignInWithRoomIdModal extends SignInModal {
   static contextType = Context;
