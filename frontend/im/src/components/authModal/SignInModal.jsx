@@ -27,6 +27,7 @@ class SignInModal extends React.Component {
       this.context.closeSignInModal()
       message.success('Login successful as ' + this.context.username)
       console.log('[signing in] ' + data.user.id + ': ' + data.user.name)
+      this.goChatPage()
     }).catch(data => {
       message.error('Login failed. Please try again.')
       console.error(data)
@@ -39,6 +40,10 @@ class SignInModal extends React.Component {
   handleUserName = (e) => {
     this.setState({ userName: e.target.value })
   };
+
+  goChatPage = () => {
+    this.props.history.push('/room/chat/' + this.context.roomid)
+  }
 
   render () {
     const layout = {

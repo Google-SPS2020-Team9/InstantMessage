@@ -30,8 +30,9 @@ class ChatPage extends React.Component {
     // TODO: show the invite page.
   }
 
-  handleExit () {
-    // TODO: show the exit page.
+  handleExit = () => {
+    this.context.showSelectRmModal()
+    this.props.history.push('/')
   }
 
   render () {

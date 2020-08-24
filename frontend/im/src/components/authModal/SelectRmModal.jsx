@@ -38,6 +38,7 @@ class SelectRmModal extends React.Component {
         this.context.setRoomName(data.room.name)
         this.context.closeSelectRmModal()
         this.context.showSignInModal()
+        this.goSignInPage()
       } else {
         console.log('[room state]: joining unsuccessful.')
         this.context.setConn(null)
@@ -89,6 +90,10 @@ class SelectRmModal extends React.Component {
   handleRoomId = (e) => {
     this.setState({ roomid: e.target.value })
   };
+
+  goSignInPage = () => {
+    this.props.history.push('/room')
+  }
 
   render () {
     const layout = {
