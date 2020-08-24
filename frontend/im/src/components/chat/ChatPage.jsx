@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Card, Divider, List, PageHeader } from 'antd'
+import { Button, Card, Divider, List, PageHeader, message } from 'antd'
 import MsgEntry from './MsgEntry'
 import SendMsg from './SendMsg'
 import { Context } from '../../context/ContextSource'
@@ -7,19 +7,30 @@ import './ChatPage.css'
 import PropTypes from 'prop-types'
 
 class ChatPage extends React.Component {
-  state = {
-    msgs: []
-  };
+  constructor (props) {
+    super(props)
+    this.wrapper = React.createRef()
+    this.textarea = React.createRef()
+    this.state = {
+      msgs: [],
+      roomId: props.match.params.roomid
+    }
+  }
 
   static contextType = Context;
 
   static get propTypes () {
     return {
-      history: PropTypes.any
+      history: PropTypes.any,
+      match: PropTypes.any
     }
   }
 
   componentDidMount () {
+    if (!this.context.conn) {
+      this.props.history.push(`/room/${this.state.roomId}`)
+      return
+    }
     this.context.conn.addHandler('push messages', (data) => {
       for (const msg of data.messages) {
         this.setState((prevState) => ({
@@ -38,8 +49,8 @@ class ChatPage extends React.Component {
   }
 
   handleExit = () => {
-    this.context.showSelectRmModal()
     this.props.history.push('/')
+    this.context.setConn(null)
   }
 
   render () {
