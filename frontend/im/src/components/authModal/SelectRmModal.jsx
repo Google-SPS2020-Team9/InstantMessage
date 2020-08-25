@@ -1,10 +1,10 @@
 import React from 'react'
-import { message, Button, Form, Input, Modal, Tabs } from 'antd'
+import { Button, Form, Input, message, Modal, Tabs } from 'antd'
 import { Context } from '../../context/ContextSource'
-import { Connection } from '../../context/Connection'
 
 import config from '../../config'
 import './AuthModal.css'
+import PropTypes from 'prop-types'
 
 const { TabPane } = Tabs
 
@@ -20,35 +20,19 @@ class SelectRmModal extends React.Component {
     }
   }
 
+  static get propTypes () {
+    return {
+      history: PropTypes.any
+    }
+  }
+
   /**
    * Handling enter room for all. A room creator also needs to enter the room.
    */
   handleEnterRoom = () => {
     console.log('SelectRmModal::handleEnterRoom')
     if (this.state.roomid === '') return
-
-    const connection = new Connection(this.state.roomid)
-    this.context.setConn(connection)
-    connection.addHandler('room state', (data) => {
-      if (data.success === true) {
-        console.log(
-          '[room state]: joining successful. Room id: ' + data.room.id
-        )
-        this.context.setRoomId(data.room.id)
-        this.context.setRoomName(data.room.name)
-        this.context.closeSelectRmModal()
-        this.context.showSignInModal()
-      } else {
-        console.log('[room state]: joining unsuccessful.')
-        this.context.setConn(null)
-        if (data.error === 'Room not exist') {
-          message.error("Room doesn't exist.")
-        } else {
-          message.error('An error occurred. Please try again.')
-          console.error(data)
-        }
-      }
-    })
+    this.goSignInPage(this.state.roomid)
   }
 
   /**
@@ -90,6 +74,10 @@ class SelectRmModal extends React.Component {
     this.setState({ roomid: e.target.value })
   };
 
+  goSignInPage = (roomId) => {
+    this.props.history.push(`/room/${roomId}`)
+  }
+
   render () {
     const layout = {
       labelCol: { span: 0 },
@@ -104,7 +92,7 @@ class SelectRmModal extends React.Component {
         title='Welcome to Instant Message!'
         centered
         className='select-room-modal'
-        visible={this.context.selectRmModalVisibility}
+        visible
         footer={null}
       >
         <Tabs

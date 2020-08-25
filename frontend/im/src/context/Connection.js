@@ -63,4 +63,8 @@ export class Connection {
       }
     })
   }
+
+  close () {
+    this.conn.close()
+  }
 }

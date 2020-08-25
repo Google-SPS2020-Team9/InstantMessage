@@ -56,6 +56,7 @@ class SendMsg extends React.Component {
           loading={this.state.submitting}
           htmlType='submit'
           type='primary'
+          onClick={this.handleSubmit}
         >
           Send
         </Button>
